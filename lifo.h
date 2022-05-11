@@ -1,3 +1,4 @@
+#pragma once
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -12,8 +13,8 @@ typedef struct lifo{
 } LIFO;
 
 
-LIFO* init_fifo();
+LIFO* init_lifo();
 void push(LIFO* lifo,int value);
 int pop(LIFO *lifo);
-void print_fifo(LIFO *lifo);
-void desalloc_fifo(LIFO * lifo);
+void print_lifo(LIFO *lifo);
+void desalloc_lifo(LIFO * lifo);

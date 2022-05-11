@@ -1,14 +1,14 @@
 CFLAGS= -O3 -g -mavx2
 
-SOURCES=src/main.c src/lifo.c src/tree.c
-OBJECTS=$(SOURCES:src/.c=build/.o)
+SOURCES=main.c lifo.c tree.c
+OBJECTS=$(SOURCES:.c=.o)
 
 all: main
 
 exe: main
 	./main config.txt
 
-build/%.o: %.c
+%.o: %.c
 	gcc ${CFLAGS} -c -o $@ $<
 
 main: ${OBJECTS}
@@ -16,4 +16,4 @@ main: ${OBJECTS}
 
 
 clean:
-	rm -f build/* main
+	rm -f *.o main

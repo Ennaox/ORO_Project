@@ -1,6 +1,6 @@
 #include "lifo.h"
 
-LIFO* init_fifo()
+LIFO* init_lifo()
 {
 	LIFO * lifo = malloc(sizeof(LIFO));
 	lifo->head = NULL;
@@ -33,7 +33,7 @@ int pop(LIFO *lifo)
 	return value;
 }
 
-void print_fifo(LIFO *lifo)
+void print_lifo(LIFO *lifo)
 {
 	if(lifo == NULL || !lifo->size)
 	{
@@ -50,7 +50,7 @@ void print_fifo(LIFO *lifo)
 	printf("\n");
 }
 
-void desalloc_fifo(LIFO * lifo)
+void desalloc_lifo(LIFO * lifo)
 {
 	if(lifo == NULL)
 		return;

@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "tree.h"
+#include "lifo.h"
+
 typedef struct problem
 {
 	int dim;
@@ -74,9 +77,9 @@ void print_mat_cost(problem pb)
 
 int main(int argc, char **argv)
 {
-	if(argc =! 2)
+	if(argc != 2)
 	{
-		printf("Fatal Error: bad number of argument\nUsage: ./%s <config_file.txt>\n",argv[0]);
+		printf("Fatal Error: bad number of argument\nUsage: %s <config_file.txt>\n",argv[0]);
 		return 1;
 	}
 	
