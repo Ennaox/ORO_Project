@@ -224,6 +224,14 @@ NODE * little(NODE * tree, LIFO * pile,NODE * ref)
 	}
 	else
 	{
+		reduction(tree->mat);
+		regret(tree);
+		add_left(tree);
+		add_right(tree);
+		push(pile,tree->right);
+		tree=tree->left;
+		if(ref->value<=tree->value)
+			return ref;
 		while(check_end(tree->mat))
 		{
 			val = reduction(tree->mat);
@@ -241,7 +249,7 @@ NODE * little(NODE * tree, LIFO * pile,NODE * ref)
 		}
 		return tree;	
 	}
-	return NULL;
+	return ref;
 }
 
 int main(int argc, char **argv)
