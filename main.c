@@ -22,7 +22,6 @@ void print_mat_cost(MAT pb)
 long reduction(MAT matrix)
 {
 	long val = 0;
-	print_mat_cost(matrix);
 	//Calcul du minimum de chaque ligne et soustraction de ce minimum
 	for(int i = 0; i<matrix.dim;i++)
 	{
@@ -117,7 +116,6 @@ void regret(NODE * tree)
 					tree->max_reg = tmp;
 					tree->traj.src = i;
 					tree->traj.dest = j;
-					printf("%d %d\n",tree->traj.src,tree->traj.dest);
 				}
 			}
 		}
@@ -188,6 +186,62 @@ int check_end(MAT mat)
 	return 0;
 }
 
+void little_print_status(NODE * tree, LIFO * pile)
+{
+		printf("Cost matrix:\n");
+		print_mat_cost(tree->mat);
+		printf("\nTree:\n");
+		print_tree(tree->root);
+		printf("\nStack:\n");
+		print_lifo(pile);
+		printf("----------------------------------------------\n");
+}
+
+long little(NODE * tree, LIFO * pile,long ref)
+{
+	long val;
+	if(ref==-1)
+	{
+		while(check_end(tree->mat))
+		{
+			val = reduction(tree->mat);
+			tree->value += val;
+			regret(tree);
+			add_left(tree);
+			add_right(tree);
+			push(pile,tree->right);
+			
+			little_print_status(tree,pile);
+			val = tree->value;
+			tree=tree->left;
+		}
+		return val;	
+	}
+	if(tree->value>=ref)
+	{
+		little_print_status(tree,pile);
+		return ref;
+	}
+	else
+	{
+		while(check_end(tree->mat))
+		{
+			val = reduction(tree->mat);
+			tree->value += val;
+			regret(tree);
+			add_left(tree);
+			add_right(tree);
+			push(pile,tree->right);
+			
+			little_print_status(tree,pile);
+			val = tree->value;
+			tree=tree->left;
+		}
+		return val;	
+	}
+	return 0;
+}
+
 int main(int argc, char **argv)
 {
 	if(argc != 2)
@@ -208,18 +262,14 @@ int main(int argc, char **argv)
 	push(pile,tree->right);
 	tree=tree->left;
 	
-	while(check_end(tree->mat))
+	little_print_status(tree,pile);
+	
+	long ref = little(tree,pile,-1);
+	printf("Reference value: %ld\n",ref);
+
+	while(pile->size!=0)
 	{
-		val = reduction(tree->mat);
-		tree->value += val;
-		regret(tree);
-		add_left(tree);
-		add_right(tree);
-		push(pile,tree->right);
-		print_tree(tree->root);
-		printf("------------------------------\n");
-		tree=tree->left;
-		
+		ref = little(pop(pile),pile,ref);	
 	}
 
 	//print_mat_cost(mat);

@@ -37,15 +37,15 @@ void print_lifo(LIFO *lifo)
 {
 	if(lifo == NULL || !lifo->size)
 	{
-		printf("Error: can't print, the lifo is empty\n");
+		printf("EMPTY\n");
 		return;
 	}
 	ENTRY * tmp = lifo->head;
-	printf("%ld ", tmp->value->value);
+	print_tree(tmp->value);
 	while(tmp->next!=NULL)
 	{
 		tmp=tmp->next;
-		printf("%d ", tmp->value->value);
+		print_tree(tmp->value);
 	}
 	printf("\n");
 }
