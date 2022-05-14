@@ -5,7 +5,7 @@ OBJECTS=$(SOURCES:.c=.o)
 
 all: main
 
-exe: main
+run: main
 	./main config.txt
 
 %.o: %.c

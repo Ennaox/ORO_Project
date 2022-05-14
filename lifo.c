@@ -8,7 +8,7 @@ LIFO* init_lifo()
 	return lifo;
 }
 
-void push(LIFO* lifo,int value)
+void push(LIFO* lifo,NODE * value)
 {
 	ENTRY * new_entry = malloc(sizeof(ENTRY));
 	new_entry->value = value;
@@ -18,14 +18,14 @@ void push(LIFO* lifo,int value)
 	lifo->size ++;
 }
 
-int pop(LIFO *lifo)
+NODE * pop(LIFO *lifo)
 {
 	if(lifo->head==NULL)
 	{
 		printf("Fatal Error: the lifo is empty\n");
 		exit(1);
 	}
-	int value = lifo->head->value;
+	NODE * value = lifo->head->value;
 	ENTRY * tmp = lifo->head;
 	lifo->head = lifo->head->next;
 	free(tmp);
@@ -41,11 +41,11 @@ void print_lifo(LIFO *lifo)
 		return;
 	}
 	ENTRY * tmp = lifo->head;
-	printf("%d ", tmp->value);
+	printf("%ld ", tmp->value->value);
 	while(tmp->next!=NULL)
 	{
 		tmp=tmp->next;
-		printf("%d ", tmp->value);
+		printf("%d ", tmp->value->value);
 	}
 	printf("\n");
 }

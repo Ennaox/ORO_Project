@@ -1,9 +1,10 @@
 #pragma once
 #include <stdlib.h>
 #include <stdio.h>
+#include "tree.h"
 
 typedef struct entry{
-	int value;
+	NODE * value;
 	struct entry * next;
 } ENTRY;
 
@@ -14,7 +15,7 @@ typedef struct lifo{
 
 
 LIFO* init_lifo();
-void push(LIFO* lifo,int value);
-int pop(LIFO *lifo);
+void push(LIFO* lifo,NODE* value);
+NODE* pop(LIFO *lifo);
 void print_lifo(LIFO *lifo);
 void desalloc_lifo(LIFO * lifo);
