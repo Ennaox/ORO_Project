@@ -197,10 +197,10 @@ void little_print_status(NODE * tree, LIFO * pile)
 		printf("----------------------------------------------\n");
 }
 
-long little(NODE * tree, LIFO * pile,long ref)
+NODE * little(NODE * tree, LIFO * pile,NODE * ref)
 {
 	long val;
-	if(ref==-1)
+	if(ref==NULL)
 	{
 		while(check_end(tree->mat))
 		{
@@ -215,9 +215,9 @@ long little(NODE * tree, LIFO * pile,long ref)
 			val = tree->value;
 			tree=tree->left;
 		}
-		return val;	
+		return tree;	
 	}
-	if(tree->value>=ref)
+	if(tree->value>=ref->value)
 	{
 		little_print_status(tree,pile);
 		return ref;
@@ -236,10 +236,12 @@ long little(NODE * tree, LIFO * pile,long ref)
 			little_print_status(tree,pile);
 			val = tree->value;
 			tree=tree->left;
+			if(ref->value<=tree->value)
+				return ref;
 		}
-		return val;	
+		return tree;	
 	}
-	return 0;
+	return NULL;
 }
 
 int main(int argc, char **argv)
@@ -264,13 +266,13 @@ int main(int argc, char **argv)
 	
 	little_print_status(tree,pile);
 	
-	long ref = little(tree,pile,-1);
+	NODE * ref = little(tree,pile,NULL);
 	printf("Reference value: %ld\n",ref);
 
 	while(pile->size!=0)
 	{
 		ref = little(pop(pile),pile,ref);	
 	}
-
-	//print_mat_cost(mat);
+	printf("Best solution score: %ld\n",ref->value);
+	printf("With path %s\n",ref->all_path->path);
 }
