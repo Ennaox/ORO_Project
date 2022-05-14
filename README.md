@@ -16,3 +16,19 @@ Matrice:
 480 300 820 750 -1 500
 660 200 630 310 500 -1
 ```
+
+## Compilation:
+Un Makefile est fourni avec cette archive, il suffit juste de taper la commande suivante pour compiler:
+```bash
+	make
+```
+
+## Exécution
+Le code peut être éxécuter grâce au Makefile avec la commande suivante, le fichier config "config.txt" sera chargé de base:
+```bash
+	make run
+```
+Une fois le code compiler, il peut être éxécuter avec la commande suivante:
+```bash
+	./main <fichier_config.txt>
+```

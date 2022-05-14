@@ -1,3 +1,8 @@
+//Problème du voyageur de commerce
+//Algorithme de Little
+//
+//Fait par LAPLANCHE Alexis
+
 #include "tree.h"
 
 LIST * init_list(char * val)
@@ -51,11 +56,8 @@ void free_entry(LIST * liste)
 
 void find_path(trajet T, NODE * tree)
 {
-	//3,4,8,5,6,7,2,1,9
 	char * path = malloc(100*sizeof(char));
 	memset(path,0,100*sizeof(char));
-	char * fullpath = malloc(100*sizeof(char));
-	memset(fullpath,0,100*sizeof(char));
 	LIST *all_path = tree->all_path;
 	
 	if(!strlen(all_path->path))
@@ -91,8 +93,44 @@ void find_path(trajet T, NODE * tree)
 			strcat(tmp_char,tmp->path);
 			memset(tmp->path,0,100*sizeof(char));
 			strcpy(tmp->path,tmp_char);
+			while(tmp!=NULL)
+			{
+				int last_site_main = 0;
+				int last_site_tmp = 0;
+				int indice_last_tmp, indice_last_main;
+				for(int i = strlen(all_path->path)-1;i>=0;i--)
+				{
+					if(all_path->path[i]<='9' && all_path->path[i]>='0'){indice_last_main = i;}
+					else {break;}
+				}
+				last_site_main = atoi(all_path->path+indice_last_main);
 				
-			//sprintf(tmp->path,"%s,%s",tmp_char,tmp->path);
+				sscanf(tmp->path,"%d,",&last_site_tmp);
+				if(last_site_tmp == last_site_main)
+				{
+					memset(all_path->path+indice_last_main-1,0,strlen(all_path->path+indice_last_main-1)*sizeof(char));
+					sprintf(all_path->path,"%s,%s",all_path->path,tmp->path);
+					free_entry(tmp);
+					break;
+				}
+				sscanf(all_path->path,"%d,",&last_site_main);
+
+				for(int i = strlen(tmp->path)-1;i>=0;i--)
+				{
+					if(tmp->path[i]<='9' && tmp->path[i]>='0'){indice_last_tmp = i;}
+					else {break;}
+				}
+				last_site_tmp = atoi(all_path->path+indice_last_tmp);
+
+				if(last_site_main == last_site_tmp)
+				{
+					memset(tmp->path+indice_last_tmp-1,0,strlen(tmp->path+indice_last_tmp-1)*sizeof(char));
+					sprintf(all_path->path,"%s,%s",tmp->path,all_path->path);
+					free_entry(tmp);
+					break;
+				}
+				tmp = tmp->next;
+			}
 			free(tmp_char);
 			break;
 		}

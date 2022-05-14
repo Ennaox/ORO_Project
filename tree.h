@@ -1,3 +1,8 @@
+//Problème du voyageur de commerce
+//Algorithme de Little
+//
+//Fait par LAPLANCHE Alexis
+
 #pragma once
 #include <stdlib.h>
 #include <stdio.h>

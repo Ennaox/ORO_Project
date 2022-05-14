@@ -1,3 +1,8 @@
+//Problème du voyageur de commerce
+//Algorithme de Little
+//
+//Fait par LAPLANCHE Alexis
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -188,8 +193,8 @@ int check_end(MAT mat)
 
 void little_print_status(NODE * tree, LIFO * pile)
 {
-		printf("Cost matrix:\n");
-		print_mat_cost(tree->mat);
+		//printf("Cost matrix:\n");
+		//print_mat_cost(tree->mat);
 		printf("\nTree:\n");
 		print_tree(tree->root);
 		printf("\nStack:\n");
@@ -211,7 +216,7 @@ NODE * little(NODE * tree, LIFO * pile,NODE * ref)
 			add_right(tree);
 			push(pile,tree->right);
 			
-			little_print_status(tree,pile);
+			//little_print_status(tree,pile);
 			val = tree->value;
 			tree=tree->left;
 		}
@@ -219,7 +224,7 @@ NODE * little(NODE * tree, LIFO * pile,NODE * ref)
 	}
 	if(tree->value>=ref->value)
 	{
-		little_print_status(tree,pile);
+		//little_print_status(tree,pile);
 		return ref;
 	}
 	else
@@ -241,7 +246,7 @@ NODE * little(NODE * tree, LIFO * pile,NODE * ref)
 			add_right(tree);
 			push(pile,tree->right);
 			
-			little_print_status(tree,pile);
+			//little_print_status(tree,pile);
 			val = tree->value;
 			tree=tree->left;
 			if(ref->value<=tree->value)
@@ -272,15 +277,15 @@ int main(int argc, char **argv)
 	push(pile,tree->right);
 	tree=tree->left;
 	
-	little_print_status(tree,pile);
-	
 	NODE * ref = little(tree,pile,NULL);
-	printf("Reference value: %ld\n",ref);
+	little_print_status(tree->root,pile);
+	printf("Reference value: %ld\n----------------------------------------------\n",ref->value);
 
 	while(pile->size!=0)
 	{
 		ref = little(pop(pile),pile,ref);	
 	}
+	little_print_status(tree->root,pile);
 	printf("Best solution score: %ld\n",ref->value);
 	printf("With path %s\n",ref->all_path->path);
 }
