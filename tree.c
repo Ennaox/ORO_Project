@@ -4,7 +4,9 @@ LIST * init_list(char * val)
 {
 	LIST * entry = malloc(sizeof(LIST));
 	entry->next = NULL;
-	entry->path = val;
+	entry->path = malloc(100*sizeof(char));
+	memset(entry->path,0,100*sizeof(char));
+	sprintf(entry->path,"%s\0",val);
 	entry->prev = NULL;
 	return entry;
 }
@@ -18,7 +20,9 @@ void add_entry(LIST * liste, char * val)
 	}
 	LIST * entry = malloc(sizeof(LIST));
 	entry->next = NULL;
-	entry->path = val;
+	entry->path = malloc(100*sizeof(char));
+	memset(entry->path,0,100*sizeof(char));
+	sprintf(entry->path,"%s\0",val);
 	entry->prev = tmp;
 	tmp->next = entry;
 }
@@ -30,8 +34,9 @@ LIST * copy_list(LIST * liste)
 	liste = liste->next;
 	while(liste!=NULL)
 	{
-		add_entry(new_liste,liste->path);
+		add_entry(tmp,liste->path);
 		tmp = tmp->next;
+		liste = liste->next;
 	}
 	return new_liste;
 }
@@ -59,7 +64,6 @@ void find_path(trajet T, NODE * tree)
 		all_path->path=path;
 		return;
 	}
-	printf("Ici\n");
 	LIST * tmp = all_path;
 	while(tmp != NULL)
 	{
@@ -89,7 +93,6 @@ void find_path(trajet T, NODE * tree)
 			strcpy(tmp->path,tmp_char);
 				
 			//sprintf(tmp->path,"%s,%s",tmp_char,tmp->path);
-			printf("%s\n",tmp->path);
 			free(tmp_char);
 			break;
 		}
@@ -108,14 +111,6 @@ void find_path(trajet T, NODE * tree)
 	}
 
 	tmp = all_path;
-	printf("Subpath: \n");
-	while(tmp!=NULL)
-	{
-		printf("%s\n",tmp->path);
-		tmp = tmp->next;
-	}
-	printf("\n");
-
 	tmp = all_path->next;
 	while(tmp!=NULL)
 	{
@@ -225,9 +220,24 @@ void add_left(NODE * tree)
 	LIST * tmp_list = tmp->all_path;
 	while(tmp_list!=NULL)
 	{
-
+		char * first_site = malloc(10*sizeof(char)); 
+		memset(first_site,0,10*sizeof(char));
+		int indice_last;
+		for(int i = strlen(tmp_list->path)-1;i>=0;i--)
+		{
+			if(tmp_list->path[i]<='9' && tmp_list->path[i]>='0'){indice_last = i;}
+			else {break;}
+		}
+		int last_val = atoi(tmp_list->path+indice_last); 
+		for(int i = 0;i<strlen(tmp_list->path);i++)
+		{
+			if(tmp_list->path[i]<='9' && tmp_list->path[i]>='0'){first_site[i] = tmp_list->path[i];}
+			else {break;}
+		}
+		int first_val = atoi(first_site);
+		tmp->mat.mat[last_val * tmp->mat.dim + first_val] = -1;
+		tmp_list = tmp_list->next;
 	}
-	
 }
 
 void add_right(NODE * tree)

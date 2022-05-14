@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <unistd.h>
 
 #include "tree.h"
 #include "lifo.h"
@@ -21,11 +22,11 @@ void print_mat_cost(MAT pb)
 long reduction(MAT matrix)
 {
 	long val = 0;
-	long min;
+	print_mat_cost(matrix);
 	//Calcul du minimum de chaque ligne et soustraction de ce minimum
 	for(int i = 0; i<matrix.dim;i++)
 	{
-		min = LONG_MAX;
+		long min = LONG_MAX;
 		for(int j = 0; j<matrix.dim;j++)
 		{
 			if(min>matrix.mat[i*matrix.dim + j] && matrix.mat[i*matrix.dim + j]>=0)
@@ -39,6 +40,10 @@ long reduction(MAT matrix)
 			{
 				matrix.mat[i*matrix.dim + j] -= min;
 			}
+		}
+		if(min == 0 || min == LONG_MAX)
+		{
+			min = 0;
 		}
 		val += min;
 	}
@@ -46,12 +51,13 @@ long reduction(MAT matrix)
 	//Calcul du minimum de chaque colone et soustraction de ce minimum
 	for(int j = 0; j<matrix.dim;j++)
 	{
-		min = LONG_MAX;
+		long min = LONG_MAX;
 		for(int i = 0; i<matrix.dim;i++)
 		{
 			if(min>matrix.mat[i*matrix.dim + j] && matrix.mat[i*matrix.dim + j]>=0)
 			{
 				min = matrix.mat[i*matrix.dim + j];
+				
 			}
 		}
 		for(int i = 0; i<matrix.dim;i++)
@@ -61,9 +67,12 @@ long reduction(MAT matrix)
 				matrix.mat[i*matrix.dim + j] -= min;
 			}
 		}
+		if(min == 0 || min == LONG_MAX)
+		{
+			min = 0;
+		}
 		val += min;
 	}
-
 	return val;
 }
 
@@ -84,14 +93,18 @@ long calc_regret(MAT mat,int row, int col)
 			min_row = mat.mat[row*mat.dim + i]; 
 		}
 	}
+	if(min_row < 0 || min_row == LONG_MAX)
+		min_row = 0;
+
+	if(min_col < 0 || min_col == LONG_MAX)
+		min_col = 0;
 	return min_row + min_col;
 }
 
 void regret(NODE * tree)
 {
-	tree->max_reg = 0;
+	tree->max_reg = -1;
 	long tmp;
-	print_mat_cost(tree->mat);
 	for(int i = 0; i<tree->mat.dim; i++)
 	{
 		for(int j = 0; j<tree->mat.dim; j++)
@@ -104,6 +117,7 @@ void regret(NODE * tree)
 					tree->max_reg = tmp;
 					tree->traj.src = i;
 					tree->traj.dest = j;
+					printf("%d %d\n",tree->traj.src,tree->traj.dest);
 				}
 			}
 		}
@@ -164,6 +178,16 @@ MAT read_config(char* F_name)
 	return pb;
 }
 
+int check_end(MAT mat)
+{
+	for(int i = 0; i<mat.dim * mat.dim;i++)
+	{
+		if(mat.mat[i]!=-1)
+			return 1;
+	}
+	return 0;
+}
+
 int main(int argc, char **argv)
 {
 	if(argc != 2)
@@ -175,18 +199,27 @@ int main(int argc, char **argv)
 	MAT mat = read_config(argv[1]);
 
 	//Début de l'algorithme
+	LIFO * pile = init_lifo();
 	long val = reduction(mat);
 	NODE * tree = init_tree(val,mat);
 	regret(tree);
 	add_left(tree);
 	add_right(tree);
+	push(pile,tree->right);
 	tree=tree->left;
 	
-	while(1)
+	while(check_end(tree->mat))
 	{
 		val = reduction(tree->mat);
-		tree->val += val;
-		print_tree(tree->root);	
+		tree->value += val;
+		regret(tree);
+		add_left(tree);
+		add_right(tree);
+		push(pile,tree->right);
+		print_tree(tree->root);
+		printf("------------------------------\n");
+		tree=tree->left;
+		
 	}
 
 	//print_mat_cost(mat);
